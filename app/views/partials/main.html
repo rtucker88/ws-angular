@@ -1,21 +1,45 @@
 <div ng-include="'partials/navbar'"></div>
 
-<div class="jumbotron">
-  <h1>'Allo, 'Allo!</h1>
-  <p class="lead">
-    <img src="images/yeoman.png" alt="I'm Yeoman"><br>
-    Always a pleasure scaffolding your apps.
-  </p>
-  <p><a class="btn btn-lg btn-success" ng-href="#">Splendid!</a></p>
+<div class="row" ng-controller="MainCtrl">
+    <div class="col-md-8" ng-controller="ChatCtrl">
+        <div class="panel panel-default chatarea">
+            <div class="panel panel-heading">
+                <span class="glyphicon glyphicon-comment"></span> Chat
+            </div>
+            <div class="panel-body">
+            <ul class="list-unstyled">
+                <li ng-repeat="msg in messages">{{msg.sender}}: {{msg.message}}</li>
+            </ul>
+            </div>
+            <div class="panel-footer">
+                <div class="input-group">
+                    <input id="btn-input" type="text" class="form-control input-sm" ng-model="msgToSend" placeholder="Type your message here..." />
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary btn-sm" ng-click="sendMessage(msgToSend)">
+                                Send</button>
+                        </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 userlist" ng-controller="UsersCtrl">
+        <div class="panel panel-default">
+            <div class="panel-heading">Users</div>
+            <ul class="list-group">
+                <li class="list-group-item">User 1</li>
+                <li class="list-group-item">User 2</li>
+                <li class="list-group-item">User 3</li>
+                <li class="list-group-item">User 4</li>
+                <li class="list-group-item">User 5</li>
+            </ul>
+        </div></div>
 </div>
-
-<div class="row marketing">
-  <div ng-repeat="thing in awesomeThings">
-      <h4>{{thing.name}}</h4>
-      <p>{{thing.info}}</p>
-  </div>
-</div>
+        <div class="row">
+            <div class="col-md-12">
+                <button class="btn btn-default pull-right" ng-click="connectClick()">{{getConnectButtonText()}}</button>
+            </div>
+        </div>
 
 <div class="footer">
-  <p>♥ from the Yeoman team</p>
+  <p>Socket.IO and Angular Talk - <a href="http://www.meetup.com/Nova-Angular">Nova Angular</a></p>
 </div>
