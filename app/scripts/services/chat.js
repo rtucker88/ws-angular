@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('wsAngularDemoApp')
-    .service('ChatService', function chatService($rootScope, socketService) {
+    .service('ChatService', function chatService($rootScope, SocketService, UsersService) {
         // Array to hold our messages
         this.messages = [];
 
@@ -14,7 +14,11 @@ angular.module('wsAngularDemoApp')
          */
         function messageReceived(event, data) {
             console.log('got message', data);
-            self.messages.push(data);
+
+            // Filter out our own messages
+            if(UsersService.myUser.id !== data.id) {
+                self.messages.push(data);
+            }
         }
 
         /**
@@ -22,14 +26,16 @@ angular.module('wsAngularDemoApp')
          * @param message the message to send
          */
         function sendMessage(message) {
-            // Append to our message list
-            self.messages.push({
-                sender: 'Me',
+            var messageToSend = {
+                sender: UsersService.myUser.name,
                 message: message
-            });
+            };
+
+            // Append to our message list
+            self.messages.push(messageToSend);
 
             // Send the actual message
-            socketService.sendMessage(message);
+            SocketService.sendMessage(messageToSend);
         }
 
         $rootScope.$on('message', messageReceived);

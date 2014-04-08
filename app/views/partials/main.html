@@ -13,9 +13,13 @@
             </div>
             <div class="panel-footer">
                 <div class="input-group">
-                    <input id="btn-input" type="text" class="form-control input-sm" ng-model="msgToSend" placeholder="Type your message here..." />
+                    <input id="btn-input" type="text"
+                           class="form-control input-sm" ng-model="msgToSend"
+                           placeholder="Type your message here..." ng-keyup="messageKeyUp($event, msgToSend)"/>
                         <span class="input-group-btn">
-                            <button class="btn btn-primary btn-sm" ng-click="sendMessage(msgToSend)">
+                            <button class="btn btn-primary btn-sm"
+                                    ng-click="sendMessage(msgToSend)"
+                                    ng-disabled="!isConnected || !msgToSend.length">
                                 Send</button>
                         </span>
                 </div>
@@ -24,19 +28,27 @@
     </div>
     <div class="col-md-4 userlist" ng-controller="UsersCtrl">
         <div class="panel panel-default">
-            <div class="panel-heading">Users</div>
+            <div class="panel-heading"><span
+                    class="glyphicon glyphicon-user"></span> Users</div>
             <ul class="list-group">
-                <li class="list-group-item">User 1</li>
-                <li class="list-group-item">User 2</li>
-                <li class="list-group-item">User 3</li>
-                <li class="list-group-item">User 4</li>
-                <li class="list-group-item">User 5</li>
+                <li class="list-group-item" ng-repeat="user in users">{{user.name}}</li>
             </ul>
         </div></div>
 </div>
         <div class="row">
-            <div class="col-md-12">
-                <button class="btn btn-default pull-right" ng-click="connectClick()">{{getConnectButtonText()}}</button>
+            <div class="col-md-12" ng-form name="userForm">
+                <form class="form-inline pull-right" role="form"
+                      >
+                    <div class="form-group" ng-hide="isConnected">
+                        <label class="sr-only" for="userName">User name</label>
+                        <input type="text" class="form-control" id="userName"
+                               placeholder="Enter username"
+                               ng-model="userName" required
+                               >
+                    </div>
+                <button type="submit" class="btn btn-default" ng-disabled="!userForm.$valid"
+                        ng-click="connectClick(userName)">{{getConnectButtonText()}}</button>
+                </form>
             </div>
         </div>
 

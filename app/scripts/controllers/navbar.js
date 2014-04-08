@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('wsAngularDemoApp')
-  .controller('NavbarCtrl', function ($scope, $location, socketService) {
+  .controller('NavbarCtrl', function ($scope, $location, SocketService) {
     $scope.menu = [{
       'title': 'Home',
       'link': '/'
@@ -12,7 +12,7 @@ angular.module('wsAngularDemoApp')
     };
 
     $scope.isConnected = function isConnected() {
-      if(socketService.isConnected) {
+      if(SocketService.isConnected) {
           return 'Connected';
       } else {
           return 'Disconnected';

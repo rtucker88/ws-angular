@@ -2,7 +2,8 @@
 'use strict';
 
 angular.module('wsAngularDemoApp')
-    .service('socketService', function chatService($rootScope) {
+    .service('SocketService', function chatService($rootScope) {
+        var hasConnected = false;
         var chatSocket;
         var usersSocket;
         this.isConnected = false;
@@ -45,12 +46,26 @@ angular.module('wsAngularDemoApp')
                     $rootScope.$broadcast('userEdited', data);
                 });
             });
+
+            ws.on('userList', function (data) {
+                // Broadcast our message received
+                $rootScope.$apply(function () {
+                    $rootScope.$broadcast('userList', data);
+                });
+            });
+
+            ws.on('userId', function (data) {
+                // Broadcast our message received
+                $rootScope.$apply(function () {
+                    $rootScope.$broadcast('userId', data);
+                });
+            });
         }
 
         /**
          * Connect to the chat server
          */
-        this.connect = function () {
+        this.connect = function (userName) {
             chatSocket = io.connect('http://localhost/chat');
             usersSocket = io.connect('http://localhost/users');
 
@@ -58,7 +73,17 @@ angular.module('wsAngularDemoApp')
             listenToUserEvents(usersSocket);
 
             this.isConnected = true;
-            usersSocket.emit('userEdited', {name: 'me'});
+            usersSocket.emit('userEdited', {name: userName});
+
+            // Send a request for reconnect info
+            if(hasConnected) {
+                usersSocket.emit('reconnect');
+                usersSocket.emit('userEdited', {name: userName});
+
+                $rootScope.$broadcast('reconnected', userName);
+            }
+
+            hasConnected = true;
         };
 
         /**
@@ -72,6 +97,9 @@ angular.module('wsAngularDemoApp')
                 usersSocket.disconnect();
             }
             this.isConnected = false;
+
+            // Disconnected message so we can clear out the userlist
+            $rootScope.$broadcast('disconnected');
         };
 
         /**
@@ -80,7 +108,7 @@ angular.module('wsAngularDemoApp')
          */
         this.sendMessage = function (message) {
             if (chatSocket) {
-                chatSocket.emit('message', { sender: 'me', message: message });
+                chatSocket.emit('message', message);
             }
         };
     });

@@ -1,5 +1,7 @@
 .userlist ul {
   border: 1px solid #eee;
+  overflow-y: scroll;
+  height: 322px;
 }
 
 .chatarea .panel-body

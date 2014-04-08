@@ -1,28 +1,32 @@
 'use strict';
 
 angular.module('wsAngularDemoApp')
-  .controller('MainCtrl', function ($scope, $http, socketService) {
+  .controller('MainCtrl', function ($scope, $http, SocketService) {
       $scope.connect = function connect() {
-        socketService.connect();
+        SocketService.connect();
       };
 
       $scope.disconnect = function disconnect() {
-        socketService.disconnect();
+        SocketService.disconnect();
       };
 
       $scope.getConnectButtonText = function connectButton() {
-        if(socketService.isConnected) {
+        if(SocketService.isConnected) {
             return 'Disconnect';
         } else {
             return 'Connect';
         }
       };
 
-      $scope.connectClick = function connectClicked() {
-          if(socketService.isConnected) {
-              socketService.disconnect();
+      $scope.connectClick = function connectClicked(userName) {
+          if(SocketService.isConnected) {
+              SocketService.disconnect();
           } else {
-              socketService.connect();
+              SocketService.connect(userName);
           }
       };
+
+      $scope.$watch(function() { return SocketService.isConnected; }, function(val) {
+          $scope.isConnected = val;
+      });
   });

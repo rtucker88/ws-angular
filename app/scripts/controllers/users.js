@@ -2,5 +2,9 @@
 
 angular.module('wsAngularDemoApp')
     .controller('UsersCtrl', function ($scope, UsersService) {
-        $scope.users = UsersService.users;
+        $scope.users = [];
+
+        $scope.$watch(function() { return UsersService.users; }, function(val) {
+            $scope.users = val;
+        }, true);
     });
